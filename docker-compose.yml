@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  library_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_USER: root
+      DATABASE_DB: Library
+      DATABASE_PASSWORD: password
+#      DATABASE_URL: mysql+pymysql://root:password@localhost/Library
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_library
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: Library
+    volumes:
+      - ./database/Library.sql:/docker-entrypoint-initdb.d/Library.sql
+    ports:
+      - "3306:3306"
